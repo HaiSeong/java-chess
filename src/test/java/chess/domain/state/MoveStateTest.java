@@ -2,6 +2,7 @@ package chess.domain.state;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.byLessThan;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import chess.domain.color.Color;
@@ -10,6 +11,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Position;
 import chess.domain.TestBoardFactory;
 import chess.domain.piece.nonsliding.Knight;
+import chess.domain.piece.pawn.BlackPawn;
 import chess.domain.piece.pawn.WhiteFirstPawn;
 import chess.domain.piece.sliding.Bishop;
 import chess.domain.piece.sliding.Queen;
@@ -56,14 +58,26 @@ class MoveStateTest {
     }
 
     @Test
-    @DisplayName("rook은 5점으로 계산된다.")
-    void calculateScoreRook() {
+    @DisplayName("색깔별로 점수 합을 구한다.")
+    void calculateScore() {
         Map<Position, Piece> board = new TestBoardFactory().getTestBoard(Map.of(
-                new Position(4, 4), new Rook(new Position(4, 4), Color.WHITE)
+                // 5 + 2.5 + 0 + 1 = 8.5
+                new Position(1, 1), new Rook(new Position(1, 1), Color.WHITE),
+                new Position(2, 1), new Knight(new Position(2, 1), Color.WHITE),
+                new Position(3, 1), new King(new Position(3, 1), Color.WHITE),
+                new Position(4, 1), new WhiteFirstPawn(new Position(4, 1)),
+
+                // 9 + 3 + 0 + 1 = 13.0
+                new Position(1, 8), new Queen(new Position(1, 8), Color.BLACK),
+                new Position(2, 8), new Bishop(new Position(2, 8), Color.BLACK),
+                new Position(3, 8), new King(new Position(3, 8), Color.BLACK),
+                new Position(4, 8), new BlackPawn(new Position(4, 8))
         ));
         MoveState moveState = new GeneralMoveState(board);
 
-        final double score = moveState.calculateScore(Color.WHITE);
-        assertThat(score).isEqualTo(5.0);
+        assertAll(
+                () -> assertThat(moveState.calculateScore(Color.WHITE)).isEqualTo(8.5),
+                () -> assertThat(moveState.calculateScore(Color.BLACK)).isEqualTo(13.0)
+        );
     }
 }

@@ -1,12 +1,15 @@
 package chess.domain.state;
 
+import chess.domain.PieceScore;
 import chess.domain.color.Color;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceType;
 import chess.domain.piece.Position;
 import chess.domain.piece.blank.Blank;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -53,5 +56,14 @@ public abstract class MoveState {
                         Map.Entry::getKey,
                         entry -> entry.getValue().pieceType()
                 ));
+    }
+
+    public double calculateScore(final Color color) {
+        double totalScore = board.values().stream()
+                .filter(piece -> piece.isSameColor(color))
+                .mapToDouble(piece -> PieceScore.findScore(piece.pieceType()))
+                .sum();
+
+        return totalScore;
     }
 }

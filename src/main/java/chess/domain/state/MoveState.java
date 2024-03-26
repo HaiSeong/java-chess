@@ -1,5 +1,6 @@
 package chess.domain.state;
 
+import chess.domain.piece.Column;
 import chess.domain.piece.PieceScore;
 import chess.domain.color.Color;
 import chess.domain.piece.Piece;
@@ -7,6 +8,7 @@ import chess.domain.piece.PieceType;
 import chess.domain.piece.Position;
 import chess.domain.piece.blank.Blank;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -62,6 +64,18 @@ public abstract class MoveState {
                 .mapToDouble(piece -> PieceScore.findScore(piece.pieceType()))
                 .sum();
 
-        return totalScore;
+        return totalScore - calculateSameLineDeductPoint(color);
+    }
+
+    private double calculateSameLineDeductPoint(Color color) {
+        Map<Column, Long> pawnCounts = board.values().stream()
+                .filter(piece -> piece.isSameColor(color))
+                .filter(piece -> piece.pieceType() == PieceType.WHITE_PAWN || piece.pieceType() == PieceType.BLACK_PAWN)
+                .collect(Collectors.groupingBy(Piece::findColumn, Collectors.counting()));
+
+        return pawnCounts.values().stream()
+                .filter(count -> count >= 2)
+                .mapToDouble(count -> count * 0.5)
+                .sum();
     }
 }

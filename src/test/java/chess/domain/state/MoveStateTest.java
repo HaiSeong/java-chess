@@ -58,7 +58,7 @@ class MoveStateTest {
     }
 
     @Test
-    @DisplayName("색깔별로 점수 합을 구한다.")
+    @DisplayName("색깔별로 점수 점수를 계산한다.")
     void calculateScore() {
         Map<Position, Piece> board = new TestBoardFactory().getTestBoard(Map.of(
                 // 5 + 2.5 + 0 + 1 = 8.5
@@ -79,5 +79,20 @@ class MoveStateTest {
                 () -> assertThat(moveState.calculateScore(Color.WHITE)).isEqualTo(8.5),
                 () -> assertThat(moveState.calculateScore(Color.BLACK)).isEqualTo(13.0)
         );
+    }
+
+    @Test
+    @DisplayName("폰이 같은 Column에 있을때 각 0.5점으로 계산한다.")
+    void calculateScorePawnInSameColumn() {
+        Map<Position, Piece> board = new TestBoardFactory().getTestBoard(Map.of(
+                // 1 + 0.5 + 0.5 + 0.5 = 2.5
+                new Position(1, 4), new WhiteFirstPawn(new Position(1, 4)),
+                new Position(3, 3), new WhiteFirstPawn(new Position(3, 3)),
+                new Position(3, 4), new WhiteFirstPawn(new Position(3, 4)),
+                new Position(3, 5), new WhiteFirstPawn(new Position(3, 5))
+        ));
+        MoveState moveState = new GeneralMoveState(board);
+
+        assertThat(moveState.calculateScore(Color.WHITE)).isEqualTo(2.5);
     }
 }

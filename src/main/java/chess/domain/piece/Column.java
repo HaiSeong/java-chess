@@ -27,4 +27,11 @@ public enum Column {
                 .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 열입니다."))
                 .value;
     }
+
+    public static Column findColumn(final int columnValue) {
+        return Arrays.stream(Column.values())
+                .filter(column -> column.value == columnValue)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("올바르지 않은 위치입니다."));
+    }
 }

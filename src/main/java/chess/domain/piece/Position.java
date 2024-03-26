@@ -90,6 +90,10 @@ public class Position {
         return positions;
     }
 
+    public Column findColumn() {
+        return Column.findColumn(x);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

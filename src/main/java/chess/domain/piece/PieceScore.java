@@ -1,16 +1,15 @@
-package chess.domain;
+package chess.domain.piece;
 
-import chess.domain.piece.PieceType;
 import java.util.Arrays;
 import java.util.List;
 
 public enum PieceScore {
-    PAWN(List.of(), 9),
-    KNIGHT(List.of(), 9),
-    BISHOP(List.of(), 9),
-    ROOK(List.of(), 9),
+    PAWN(List.of(PieceType.WHITE_PAWN, PieceType.BLACK_PAWN), 1.0),
+    KNIGHT(List.of(PieceType.WHITE_KNIGHT, PieceType.BLACK_KNIGHT), 2.5),
+    BISHOP(List.of(PieceType.WHITE_BISHOP, PieceType.BLACK_BISHOP), 3),
+    ROOK(List.of(PieceType.WHITE_ROOK, PieceType.BLACK_ROOK), 5),
     QUEEN(List.of(PieceType.WHITE_QUEEN, PieceType.BLACK_QUEEN), 9),
-    KING(List.of(), 9);
+    KING(List.of(PieceType.WHITE_KING, PieceType.BLACK_KING), 0);
 
     private final List<PieceType> pieceTypes;
     private final double score;

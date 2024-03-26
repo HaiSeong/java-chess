@@ -67,7 +67,7 @@ public abstract class MoveState {
         return totalScore - calculateSameLineDeductPoint(color);
     }
 
-    private double calculateSameLineDeductPoint(Color color) {
+    private double calculateSameLineDeductPoint(final Color color) {
         Map<Column, Long> pawnCounts = board.values().stream()
                 .filter(piece -> piece.isSameColor(color))
                 .filter(piece -> piece.pieceType() == PieceType.WHITE_PAWN || piece.pieceType() == PieceType.BLACK_PAWN)

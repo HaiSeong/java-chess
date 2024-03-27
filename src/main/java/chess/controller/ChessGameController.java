@@ -7,6 +7,7 @@ import chess.domain.piece.Column;
 import chess.domain.piece.Position;
 import chess.view.InputView;
 import chess.view.OutputView;
+import chess.view.display.WinnerDisplay;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -56,9 +57,13 @@ public class ChessGameController {
 
     private void doOneRound(final ChessGame chessGame) {
         final String command = inputView.readCommand();
-        if (command.startsWith("move")) {
+        if (command.startsWith("move") && chessGame.checkGameState() == GameState.PLAYING) {
             movePiece(chessGame, command);
             checkGameFinished(chessGame);
+            return;
+        }
+        if (command.equals("status")) {
+            printStatus(chessGame);
             return;
         }
         if (command.equals("end")) {
@@ -76,13 +81,21 @@ public class ChessGameController {
     private void checkGameFinished(final ChessGame chessGame) {
         if (chessGame.checkGameState() == GameState.WHITE_WIN) {
             System.out.println("흰색이 이겼습니다.");
-            System.exit(0);
         }
         if (chessGame.checkGameState() == GameState.BLACK_WIN) {
             System.out.println("검은색이 이겼습니다.");
-            System.exit(0);
         }
     }
+
+    private void printStatus(final ChessGame chessGame) {
+        final GameState gameState = chessGame.checkGameState();
+        if (gameState == GameState.PLAYING) {
+            outputView.printScores(chessGame.calculateScore());
+            return;
+        }
+        outputView.printWinner(WinnerDisplay.findWinnerDisplay(gameState));
+    }
+
 
     private List<Position> readPositions(final String command) {
         final List<Position> positions = new ArrayList<>();

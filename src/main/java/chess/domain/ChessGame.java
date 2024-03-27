@@ -30,4 +30,14 @@ public class ChessGame {
     public Map<Position, PieceType> collectBoard() {
         return moveState.collectBoard();
     }
+
+    public GameState checkGameState() {
+        if (moveState.isKingDead(Color.WHITE)) {
+            return GameState.BLACK_WIN;
+        }
+        if (moveState.isKingDead(Color.BLACK)) {
+            return GameState.WHITE_WIN;
+        }
+        return GameState.PLAYING;
+    }
 }

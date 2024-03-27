@@ -1,17 +1,20 @@
 package chess.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.DynamicTest.dynamicTest;
 
 import chess.domain.color.Color;
 import chess.domain.piece.Position;
+import chess.domain.piece.nonsliding.King;
 import chess.domain.piece.sliding.Rook;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 
 class ChessGameTest {
@@ -42,5 +45,37 @@ class ChessGameTest {
                     assertDoesNotThrow(() -> chessGame.move(new Position(8, 8), new Position(8, 7)));
                 })
         );
+    }
+
+    @Test
+    @DisplayName("왕이 둘다 살아있으면 진행중인 게임이다.")
+    void checkGameStatePlaying() {
+        ChessGame chessGame = new ChessGame(new TestBoardFactory().getTestBoard(Map.of(
+                new Position(8, 1), new King(new Position(8, 1), Color.WHITE),
+                new Position(1, 8), new King(new Position(1, 8), Color.BLACK)
+        )));
+
+        assertThat(chessGame.checkGameState()).isEqualTo(GameState.PLAYING);
+    }
+
+    @Test
+    @DisplayName("검은왕이 죽으면 흰색이 이긴다.")
+    void checkGameStateWhiteWin() {
+        ChessGame chessGame = new ChessGame(new TestBoardFactory().getTestBoard(Map.of(
+                new Position(8, 1), new King(new Position(8, 1), Color.WHITE)
+        )));
+
+        assertThat(chessGame.checkGameState()).isEqualTo(GameState.WHITE_WIN);
+
+    }
+
+    @Test
+    @DisplayName("흰색왕이 죽으면 검은색이 이긴다.")
+    void checkGameStateBlackWin() {
+        ChessGame chessGame = new ChessGame(new TestBoardFactory().getTestBoard(Map.of(
+                new Position(8, 1), new King(new Position(8, 1), Color.BLACK)
+        )));
+
+        assertThat(chessGame.checkGameState()).isEqualTo(GameState.BLACK_WIN);
     }
 }

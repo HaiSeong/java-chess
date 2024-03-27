@@ -11,6 +11,7 @@ import chess.domain.piece.Piece;
 import chess.domain.piece.Position;
 import chess.domain.TestBoardFactory;
 import chess.domain.piece.nonsliding.Knight;
+import chess.domain.piece.pawn.BlackFirstPawn;
 import chess.domain.piece.pawn.BlackPawn;
 import chess.domain.piece.pawn.WhiteFirstPawn;
 import chess.domain.piece.sliding.Bishop;
@@ -94,5 +95,35 @@ class MoveStateTest {
         MoveState moveState = new GeneralMoveState(board);
 
         assertThat(moveState.calculateScore(Color.WHITE)).isEqualTo(2.5);
+    }
+
+    @Test
+    @DisplayName("왕이 죽었는지 여부를 확인한다.")
+    void isKingDeadBlackKingDead() {
+        Map<Position, Piece> board = new TestBoardFactory().getTestBoard(Map.of(
+                new Position(4, 4), new WhiteFirstPawn(new Position(4, 4)),
+                new Position(5, 5), new King(new Position(5, 5), Color.BLACK),
+                new Position(5, 1), new King(new Position(5, 1), Color.WHITE)
+        ));
+
+        MoveState moveState = new GeneralMoveState(board);
+        moveState.move(Color.WHITE, new Position(4, 4), new Position(5, 5));
+
+        assertThat(moveState.isKingDead(Color.BLACK)).isTrue();
+    }
+
+    @Test
+    @DisplayName("흰색 왕이 죽으면 흰색이 승리한다.")
+    void isKingDeadWhiteKingDead() {
+        Map<Position, Piece> board = new TestBoardFactory().getTestBoard(Map.of(
+                new Position(4, 4), new BlackFirstPawn(new Position(4, 4)),
+                new Position(3, 3), new King(new Position(3, 3), Color.WHITE),
+                new Position(5, 8), new King(new Position(5, 8), Color.BLACK)
+        ));
+
+        MoveState moveState = new GeneralMoveState(board);
+        moveState.move(Color.BLACK, new Position(4, 4), new Position(3, 3));
+
+        assertThat(moveState.isKingDead(Color.WHITE)).isTrue();
     }
 }

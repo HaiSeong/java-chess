@@ -78,4 +78,11 @@ public abstract class MoveState {
                 .mapToDouble(count -> count * 0.5)
                 .sum();
     }
+
+    public boolean isKingDead(final Color color) {
+        return board.values().stream()
+                .filter(piece -> piece.isSameColor(color))
+                .map(Piece::pieceType)
+                .noneMatch(pieceType -> pieceType == PieceType.WHITE_KING || pieceType == PieceType.BLACK_KING);
+    }
 }

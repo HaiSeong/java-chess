@@ -2,6 +2,7 @@ package chess.controller;
 
 import chess.domain.BoardFactory;
 import chess.domain.ChessGame;
+import chess.domain.GameState;
 import chess.domain.piece.Column;
 import chess.domain.piece.Position;
 import chess.view.InputView;
@@ -55,19 +56,32 @@ public class ChessGameController {
 
     private void doOneRound(final ChessGame chessGame) {
         final String command = inputView.readCommand();
+        if (command.startsWith("move")) {
+            movePiece(chessGame, command);
+            checkGameFinished(chessGame);
+            return;
+        }
         if (command.equals("end")) {
             System.exit(0);
         }
-        if (!command.startsWith("move")) {
-            throw new IllegalArgumentException("올바른 명령어를 입력해 주세요.");
-        }
-        movePiece(chessGame, command);
+        throw new IllegalArgumentException("올바른 명령어를 입력해 주세요.");
     }
 
     private void movePiece(final ChessGame chessGame, final String command) {
         final List<Position> positions = readPositions(command);
         chessGame.move(positions.get(COLUMN_INDEX), positions.get(RANK_INDEX));
         outputView.printBoard(chessGame.collectBoard());
+    }
+
+    private void checkGameFinished(final ChessGame chessGame) {
+        if (chessGame.checkGameState() == GameState.WHITE_WIN) {
+            System.out.println("흰색이 이겼습니다.");
+            System.exit(0);
+        }
+        if (chessGame.checkGameState() == GameState.BLACK_WIN) {
+            System.out.println("검은색이 이겼습니다.");
+            System.exit(0);
+        }
     }
 
     private List<Position> readPositions(final String command) {

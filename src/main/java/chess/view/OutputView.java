@@ -18,7 +18,7 @@ public class OutputView {
     }
 
     public void printGuidanceForStart() {
-        System.out.println("'start'를 입력하면 체스 게임을 시작합니다.");
+        System.out.println("'start' 또는 'continue'를 입력하면 체스 게임을 시작합니다.");
     }
 
     public void printBoard(final Map<Position, PieceType> board) {
@@ -34,6 +34,9 @@ public class OutputView {
     public void printScores(final StatusDto statusDto) {
         System.out.println("흰색 점수 : " + statusDto.whiteScore());
         System.out.println("검은색 점수 : " + statusDto.blackScore());
+    }
+
+    public void printGamePlaying() {
         System.out.println("게임이 아직 진행중입니다.");
     }
 

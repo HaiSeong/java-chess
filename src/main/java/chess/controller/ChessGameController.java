@@ -110,8 +110,9 @@ public class ChessGameController {
 
     private void printStatus(final ChessGame chessGame) {
         final GameState gameState = chessGame.checkGameState();
+        outputView.printScores(chessGame.calculateScore());
         if (gameState == GameState.PLAYING) {
-            outputView.printScores(chessGame.calculateScore());
+            outputView.printGamePlaying();
             return;
         }
         outputView.printWinner(WinnerDisplay.findWinnerDisplay(gameState));

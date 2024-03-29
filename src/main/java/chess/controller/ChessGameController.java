@@ -5,6 +5,8 @@ import chess.domain.ChessGame;
 import chess.domain.GameState;
 import chess.domain.piece.Column;
 import chess.domain.piece.Position;
+import chess.dto.Move;
+import chess.repository.MoveRepository;
 import chess.view.InputView;
 import chess.view.OutputView;
 import chess.view.display.WinnerDisplay;
@@ -23,27 +25,43 @@ public class ChessGameController {
 
     private final InputView inputView;
     private final OutputView outputView;
+    private final MoveRepository moveRepository;
 
-    public ChessGameController(final InputView inputView, final OutputView outputView) {
+    public ChessGameController(final InputView inputView, final OutputView outputView, MoveRepository moveRepository) {
         this.inputView = inputView;
         this.outputView = outputView;
+        this.moveRepository = moveRepository;
     }
 
     public void run() {
         outputView.printWelcomeMessage();
-        waitStartCommand();
         final ChessGame chessGame = new ChessGame(new BoardFactory().getInitialBoard());
+        waitStartCommand(chessGame);
         outputView.printBoard(chessGame.collectBoard());
         startChessGame(chessGame);
     }
 
-    private void waitStartCommand() {
+    private void waitStartCommand(final ChessGame chessGame) {
         final String command = inputView.readCommand();
         if ("start".equals(command)) {
+            moveRepository.clear();
+            return;
+        }
+        if ("continue".equals(command)) {
+            loadPreviousGame(chessGame);
             return;
         }
         outputView.printGuidanceForStart();
-        waitStartCommand();
+        waitStartCommand(chessGame);
+    }
+
+    private void loadPreviousGame(final ChessGame chessGame) {
+        final List<Move> moves = moveRepository.findAll();
+        for (final Move move : moves) {
+            final Position source = new Position(move.source_x(), move.source_y());
+            final Position destination = new Position(move.destination_x(), move.destination_y());
+            chessGame.move(source, destination);
+        }
     }
 
     private void startChessGame(final ChessGame chessGame) {
@@ -74,7 +92,10 @@ public class ChessGameController {
 
     private void movePiece(final ChessGame chessGame, final String command) {
         final List<Position> positions = readPositions(command);
-        chessGame.move(positions.get(COLUMN_INDEX), positions.get(RANK_INDEX));
+        final Position source = positions.get(SOURCE_INDEX);
+        final Position destination = positions.get(DESTINATION_INDEX);
+        chessGame.move(source, destination);
+        moveRepository.save(Move.of(source, destination));
         outputView.printBoard(chessGame.collectBoard());
     }
 

@@ -33,7 +33,10 @@ public class ChessGame {
     }
 
     public StatusDto calculateScore() {
-        return new StatusDto(moveState.calculateScore(Color.WHITE), moveState.calculateScore(Color.BLACK));
+        return new StatusDto(
+                moveState.calculateScore(Color.WHITE),
+                moveState.calculateScore(Color.BLACK)
+        );
     }
 
     public GameState checkGameState() {

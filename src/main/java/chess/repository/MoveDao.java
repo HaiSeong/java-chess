@@ -1,6 +1,6 @@
 package chess.repository;
 
-import chess.dto.Move;
+import chess.dto.Movement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -16,7 +16,7 @@ public class MoveDao implements MoveRepository {
     private static final String OPTION = "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "root";
-    private static final String TABLE = "move";
+    private static final String TABLE = "movement";
 
     public Connection getConnection() {
         try {
@@ -28,15 +28,15 @@ public class MoveDao implements MoveRepository {
     }
 
     @Override
-    public void save(Move move) {
+    public void save(Movement movement) {
         Connection connection = getConnection();
         final String sql =
-                "INSERT INTO " + TABLE + " (source_x, source_y, destination_x, destination_y) VALUES (?, ?, ?, ?)";
+                "INSERT INTO " + TABLE + " (source_column, source_rank, destination_column, destination_rank) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, move.source_x());
-            statement.setInt(2, move.source_y());
-            statement.setInt(3, move.destination_x());
-            statement.setInt(4, move.destination_y());
+            statement.setInt(1, movement.source_column());
+            statement.setInt(2, movement.source_rank());
+            statement.setInt(3, movement.destination_column());
+            statement.setInt(4, movement.destination_rank());
             statement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -44,25 +44,25 @@ public class MoveDao implements MoveRepository {
     }
 
     @Override
-    public List<Move> findAll() {
+    public List<Movement> findAll() {
         Connection connection = getConnection();
         final String sql = "SELECT * FROM " + TABLE;
-        ArrayList<Move> moves = new ArrayList<>();
+        ArrayList<Movement> movements = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.executeQuery();
             ResultSet resultSet = statement.getResultSet();
             while (resultSet.next()) {
-                int source_x = resultSet.getInt(1);
-                int source_y = resultSet.getInt(2);
-                int destination_x = resultSet.getInt(3);
-                int destination_y = resultSet.getInt(4);
-                Move move = new Move(source_x, source_y, destination_x, destination_y);
-                moves.add(move);
+                int source_column = resultSet.getInt(1);
+                int source_rank = resultSet.getInt(2);
+                int destination_column = resultSet.getInt(3);
+                int destination_rank = resultSet.getInt(4);
+                Movement movement = new Movement(source_column, source_rank, destination_column, destination_rank);
+                movements.add(movement);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return moves;
+        return movements;
     }
 
     @Override

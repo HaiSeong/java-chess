@@ -1,13 +1,13 @@
 package chess.repository;
 
-import chess.dto.Move;
+import chess.dto.Movement;
 import java.util.List;
 
 public interface MoveRepository {
 
-    void save(Move move);
+    void save(Movement movement);
 
-    List<Move> findAll();
+    List<Movement> findAll();
 
     void clear();
 }

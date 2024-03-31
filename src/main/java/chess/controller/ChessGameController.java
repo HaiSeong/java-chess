@@ -5,7 +5,7 @@ import chess.domain.ChessGame;
 import chess.domain.GameState;
 import chess.domain.piece.Column;
 import chess.domain.piece.Position;
-import chess.dto.Move;
+import chess.dto.Movement;
 import chess.repository.MoveRepository;
 import chess.view.InputView;
 import chess.view.OutputView;
@@ -56,10 +56,10 @@ public class ChessGameController {
     }
 
     private void loadPreviousGame(final ChessGame chessGame) {
-        final List<Move> moves = moveRepository.findAll();
-        for (final Move move : moves) {
-            final Position source = new Position(move.source_x(), move.source_y());
-            final Position destination = new Position(move.destination_x(), move.destination_y());
+        final List<Movement> movements = moveRepository.findAll();
+        for (final Movement movement : movements) {
+            final Position source = new Position(movement.source_column(), movement.source_rank());
+            final Position destination = new Position(movement.destination_column(), movement.destination_rank());
             chessGame.move(source, destination);
         }
     }
@@ -95,7 +95,7 @@ public class ChessGameController {
         final Position source = positions.get(SOURCE_INDEX);
         final Position destination = positions.get(DESTINATION_INDEX);
         chessGame.move(source, destination);
-        moveRepository.save(Move.of(source, destination));
+        moveRepository.save(Movement.of(source, destination));
         outputView.printBoard(chessGame.collectBoard());
     }
 

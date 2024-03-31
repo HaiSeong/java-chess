@@ -1,17 +1,17 @@
 package chess;
 
 import chess.controller.ChessGameController;
-import chess.repository.MoveDao;
+import chess.repository.MySqlMoveRepository;
 import chess.repository.MoveRepository;
 import chess.view.InputView;
 import chess.view.OutputView;
 
 public class Application {
     public static void main(String[] args) {
-        InputView inputView = new InputView();
-        OutputView outputView = new OutputView();
-        MoveRepository moveRepository = new MoveDao();
-        ChessGameController chessGameController = new ChessGameController(inputView, outputView, moveRepository);
+        final InputView inputView = new InputView();
+        final OutputView outputView = new OutputView();
+        final MoveRepository moveRepository = new MySqlMoveRepository();
+        final ChessGameController chessGameController = new ChessGameController(inputView, outputView, moveRepository);
         chessGameController.run();
     }
 }

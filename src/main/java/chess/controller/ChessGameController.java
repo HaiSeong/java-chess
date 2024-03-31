@@ -36,12 +36,12 @@ public class ChessGameController {
     public void run() {
         outputView.printWelcomeMessage();
         final ChessGame chessGame = new ChessGame(new BoardFactory().getInitialBoard());
-        waitStartCommand(chessGame);
+        waitGameInitializationCommand(chessGame);
         outputView.printBoard(chessGame.collectBoard());
         startChessGame(chessGame);
     }
 
-    private void waitStartCommand(final ChessGame chessGame) {
+    private void waitGameInitializationCommand(final ChessGame chessGame) {
         final String command = inputView.readCommand();
         if ("start".equals(command)) {
             moveRepository.clear();
@@ -52,7 +52,7 @@ public class ChessGameController {
             return;
         }
         outputView.printGuidanceForStart();
-        waitStartCommand(chessGame);
+        waitGameInitializationCommand(chessGame);
     }
 
     private void loadPreviousGame(final ChessGame chessGame) {

@@ -1,7 +1,6 @@
 package chess.domain;
 
 import chess.domain.color.Color;
-import chess.domain.dto.StatusDto;
 import chess.domain.piece.Piece;
 import chess.domain.piece.PieceType;
 import chess.domain.piece.Position;
@@ -32,11 +31,8 @@ public class ChessGame {
         return moveState.collectBoard();
     }
 
-    public StatusDto calculateScore() {
-        return new StatusDto(
-                moveState.calculateScore(Color.WHITE),
-                moveState.calculateScore(Color.BLACK)
-        );
+    public double calculateScore(Color color) {
+        return moveState.calculateScore(color);
     }
 
     public GameState checkGameState() {

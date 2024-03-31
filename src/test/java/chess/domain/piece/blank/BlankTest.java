@@ -25,4 +25,14 @@ class BlankTest {
         assertThatThrownBy(() -> blank.update(new Position(1, 2)))
                 .hasMessage("해당 위치에 말이 없습니다.");
     }
+
+    @Test
+    @DisplayName("Blank는 점수를 구할 수 없다.")
+    void score() {
+        Blank blank = new Blank(new Position(1, 1));
+
+        assertThatThrownBy(blank::score)
+                .isInstanceOf(UnsupportedOperationException.class)
+                .hasMessage("빈칸은 점수가 없습니다.");
+    }
 }

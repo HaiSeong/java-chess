@@ -63,4 +63,12 @@ class BlackPawnTest {
 
         assertThat(blackPawn.pieceType()).isEqualTo(PieceType.BLACK_PAWN);
     }
+
+    @Test
+    @DisplayName("BlackPawn은 1점이다.")
+    void score() {
+        BlackPawn blackPawn = new BlackPawn(new Position(1, 1));
+
+        assertThat(blackPawn.score()).isEqualTo(1);
+    }
 }

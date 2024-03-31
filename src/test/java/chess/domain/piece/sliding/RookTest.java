@@ -37,4 +37,12 @@ class RookTest {
                 .isThrownBy(() -> rook.findPathTo(new Position(2, 2)))
                 .withMessage("이동할 수 없습니다.");
     }
+
+    @Test
+    @DisplayName("Rook은 5점이다.")
+    void score() {
+        Rook rook = new Rook(new Position(1, 1), Color.WHITE);
+
+        assertThat(rook.score()).isEqualTo(5);
+    }
 }

@@ -35,4 +35,6 @@ public abstract class Piece {
     public abstract Piece update(final Position destination);
 
     public abstract PieceType pieceType();
+
+    public abstract double score();
 }

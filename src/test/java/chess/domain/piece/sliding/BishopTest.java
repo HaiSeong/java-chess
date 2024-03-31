@@ -28,4 +28,12 @@ class BishopTest {
                 .isThrownBy(() -> bishop.findPathTo(new Position(2, 1)))
                 .withMessage("이동할 수 없습니다.");
     }
+
+    @Test
+    @DisplayName("Bishop은 3점이다.")
+    void score() {
+        Bishop bishop = new Bishop(new Position(1, 1), Color.WHITE);
+
+        assertThat(bishop.score()).isEqualTo(3);
+    }
 }

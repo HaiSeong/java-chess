@@ -1,6 +1,5 @@
 package chess.view;
 
-import chess.domain.dto.StatusDto;
 import chess.domain.piece.PieceType;
 import chess.domain.piece.Position;
 import chess.view.display.PieceDisplay;
@@ -31,9 +30,9 @@ public class OutputView {
         System.out.println(message);
     }
 
-    public void printScores(final StatusDto statusDto) {
-        System.out.println("흰색 점수 : " + statusDto.whiteScore());
-        System.out.println("검은색 점수 : " + statusDto.blackScore());
+    public void printScores(final double whiteScore, final double blackScore) {
+        System.out.println("흰색 점수 : " + whiteScore);
+        System.out.println("검은색 점수 : " + blackScore);
     }
 
     public void printGamePlaying() {
@@ -41,6 +40,6 @@ public class OutputView {
     }
 
     public void printWinner(final String winner) {
-        System.out.println(winner +"색이 이겼습니다.");
+        System.out.println(winner + "색이 이겼습니다.");
     }
 }

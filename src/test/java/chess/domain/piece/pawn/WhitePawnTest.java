@@ -89,4 +89,12 @@ class WhitePawnTest {
 
         assertThat(whitePawn.pieceType()).isEqualTo(PieceType.WHITE_PAWN);
     }
+
+    @Test
+    @DisplayName("WhitePawn은 1점이다.")
+    void score() {
+        WhitePawn whitePawn = new WhitePawn(new Position(1, 1));
+
+        assertThat(whitePawn.score()).isEqualTo(1);
+    }
 }

@@ -2,6 +2,7 @@ package chess.domain.piece.nonsliding;
 
 import chess.domain.color.Color;
 import chess.domain.piece.Direction;
+import chess.domain.piece.PieceScore;
 import chess.domain.piece.PieceType;
 import chess.domain.piece.Position;
 import java.util.Set;
@@ -24,5 +25,10 @@ public class King extends NonSlidingPiece {
             return PieceType.WHITE_KING;
         }
         return PieceType.BLACK_KING;
+    }
+
+    @Override
+    public double score() {
+        return PieceScore.KING.score();
     }
 }

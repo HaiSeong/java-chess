@@ -2,11 +2,13 @@ package chess.domain.piece.blank;
 
 import chess.domain.color.Color;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceScore;
 import chess.domain.piece.PieceType;
 import chess.domain.piece.Position;
 import java.util.Set;
 
 public class Blank extends Piece {
+
     public Blank(final Position position) {
         super(position, Color.NONE);
     }
@@ -24,5 +26,10 @@ public class Blank extends Piece {
     @Override
     public PieceType pieceType() {
         return PieceType.BLANK;
+    }
+
+    @Override
+    public double score() {
+        throw new UnsupportedOperationException("빈칸은 점수가 없습니다.");
     }
 }

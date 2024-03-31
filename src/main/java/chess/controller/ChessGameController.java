@@ -3,6 +3,7 @@ package chess.controller;
 import chess.domain.BoardFactory;
 import chess.domain.ChessGame;
 import chess.domain.GameState;
+import chess.domain.color.Color;
 import chess.domain.piece.Column;
 import chess.domain.piece.Position;
 import chess.dto.Movement;
@@ -108,7 +109,7 @@ public class ChessGameController {
 
     private void printStatus(final ChessGame chessGame) {
         final GameState gameState = chessGame.checkGameState();
-        outputView.printScores(chessGame.calculateScore());
+        outputView.printScores(chessGame.calculateScore(Color.WHITE), chessGame.calculateScore(Color.BLACK));
         if (gameState == GameState.PLAYING) {
             outputView.printGamePlaying();
             return;

@@ -46,4 +46,12 @@ class QueenTest {
                 .isThrownBy(() -> queen.findPathTo(new Position(2, 4)))
                 .withMessage("이동할 수 없습니다.");
     }
+
+    @Test
+    @DisplayName("Queen은 9점이다.")
+    void score() {
+        Queen queen = new Queen(new Position(1, 1), Color.WHITE);
+
+        assertThat(queen.score()).isEqualTo(9);
+    }
 }

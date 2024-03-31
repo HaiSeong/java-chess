@@ -41,4 +41,12 @@ class KnightTest {
 
         assertThat(knight.pieceType()).isEqualTo(PieceType.WHITE_KNIGHT);
     }
+
+    @Test
+    @DisplayName("Knight는 2.5점이다.")
+    void score() {
+        Knight knight = new Knight(new Position(1, 1), Color.WHITE);
+
+        assertThat(knight.score()).isEqualTo(2.5);
+    }
 }

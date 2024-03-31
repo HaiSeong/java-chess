@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public abstract class MoveState {
     protected final Map<Position, Piece> board;
 
-    public MoveState(final Map<Position, Piece> board) {
+    protected MoveState(final Map<Position, Piece> board) {
         this.board = new HashMap<>(board);
     }
 
@@ -61,7 +61,8 @@ public abstract class MoveState {
     public double calculateScore(final Color color) {
         double totalScore = board.values().stream()
                 .filter(piece -> piece.isSameColor(color))
-                .mapToDouble(piece -> PieceScore.findScore(piece.pieceType()))
+                .mapToDouble(Piece::score)
+//                .mapToDouble(piece -> PieceScore.findScore(piece.pieceType()))
                 .sum();
 
         return totalScore - calculateSameLineDeductPoint(color);

@@ -3,6 +3,7 @@ package chess.domain.piece.pawn;
 import chess.domain.color.Color;
 import chess.domain.piece.Direction;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceScore;
 import chess.domain.piece.Position;
 import java.util.Set;
 
@@ -25,4 +26,9 @@ public abstract class Pawn extends Piece {
     }
 
     public abstract boolean isCaptureMove(final Position destination);
+
+    @Override
+    public double score() {
+        return PieceScore.PAWN.score();
+    }
 }

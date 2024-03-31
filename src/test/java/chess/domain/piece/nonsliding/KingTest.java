@@ -2,10 +2,12 @@ package chess.domain.piece.nonsliding;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import chess.domain.color.Color;
 import chess.domain.piece.PieceType;
 import chess.domain.piece.Position;
+import chess.domain.piece.blank.Blank;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -40,5 +42,13 @@ class KingTest {
         King king = new King(new Position(1, 1), Color.WHITE);
 
         assertThat(king.pieceType()).isEqualTo(PieceType.WHITE_KING);
+    }
+
+    @Test
+    @DisplayName("King은 0점이다.")
+    void score() {
+        King king = new King(new Position(1, 1), Color.WHITE);
+
+        assertThat(king.score()).isEqualTo(0);
     }
 }

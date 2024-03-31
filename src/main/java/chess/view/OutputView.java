@@ -40,7 +40,11 @@ public class OutputView {
         System.out.println("게임이 아직 진행중입니다.");
     }
 
-    public void printWinner(final String winner) {
-        System.out.println(winner + "색이 이겼습니다.");
+    public void printWhiteWin() {
+        System.out.println("흰색이 이겼습니다.");
+    }
+
+    public void printBlackWin() {
+        System.out.println("검은색이 이겼습니다.");
     }
 }

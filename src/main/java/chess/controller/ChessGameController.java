@@ -1,88 +1,60 @@
 package chess.controller;
 
-import chess.domain.BoardFactory;
-import chess.domain.ChessGame;
-import chess.domain.GameState;
-import chess.domain.color.Color;
-import chess.domain.piece.Column;
-import chess.domain.piece.Position;
-import chess.dto.Movement;
-import chess.repository.MoveRepository;
+import chess.service.ChessService;
 import chess.view.InputView;
 import chess.view.OutputView;
-import chess.view.display.WinnerDisplay;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChessGameController {
-    private static final Pattern MOVE_COMMAND_PATTERN = Pattern.compile("^move\\s+([a-h][1-8]\\s+[a-h][1-8])$");
-    private static final int COLUMN_INDEX = 0;
-    private static final int RANK_INDEX = 1;
-    private static final int SOURCE_INDEX = 0;
-    private static final int DESTINATION_INDEX = 1;
-    private static final int SOURCE_DESTINATION_INDEX = 1;
-
     private final InputView inputView;
     private final OutputView outputView;
-    private final MoveRepository moveRepository;
+    private final ChessService chessService;
 
-    public ChessGameController(final InputView inputView, final OutputView outputView, MoveRepository moveRepository) {
+    public ChessGameController(final InputView inputView, final OutputView outputView, ChessService chessService) {
         this.inputView = inputView;
         this.outputView = outputView;
-        this.moveRepository = moveRepository;
+        this.chessService = chessService;
     }
 
     public void run() {
         outputView.printWelcomeMessage();
-        final ChessGame chessGame = new ChessGame(new BoardFactory().getInitialBoard());
-        waitGameInitializationCommand(chessGame);
-        outputView.printBoard(chessGame.collectBoard());
-        startChessGame(chessGame);
+        waitGameInitializationCommand();
+        outputView.printBoard(chessService.collectBoard());
+        startChessGame();
     }
 
-    private void waitGameInitializationCommand(final ChessGame chessGame) {
+    private void waitGameInitializationCommand() {
         final String command = inputView.readCommand();
         if ("start".equals(command)) {
-            moveRepository.clear();
+            chessService.clearGame();
             return;
         }
         if ("continue".equals(command)) {
-            loadPreviousGame(chessGame);
+            chessService.loadPreviousGame();
             return;
         }
         outputView.printGuidanceForStart();
-        waitGameInitializationCommand(chessGame);
+        waitGameInitializationCommand();
     }
 
-    private void loadPreviousGame(final ChessGame chessGame) {
-        final List<Movement> movements = moveRepository.findAll();
-        for (final Movement movement : movements) {
-            final Position source = new Position(movement.source_column(), movement.source_rank());
-            final Position destination = new Position(movement.destination_column(), movement.destination_rank());
-            chessGame.move(source, destination);
-        }
-    }
-
-    private void startChessGame(final ChessGame chessGame) {
+    private void startChessGame() {
         try {
-            doOneRound(chessGame);
+            doOneRound();
         } catch (IllegalArgumentException e) {
             outputView.printErrorMessage(e.getMessage());
         }
-        startChessGame(chessGame);
+        outputView.printBoard(chessService.collectBoard());
+        startChessGame();
     }
 
-    private void doOneRound(final ChessGame chessGame) {
+    private void doOneRound() {
         final String command = inputView.readCommand();
-        if (command.startsWith("move") && chessGame.checkGameState() == GameState.PLAYING) {
-            movePiece(chessGame, command);
-            checkGameFinished(chessGame);
+        if (command.startsWith("move") && chessService.isPlayingState()) {
+            chessService.movePiece(command);
+            printWinnerIfGameFinished();
             return;
         }
         if (command.equals("status")) {
-            printStatus(chessGame);
+            printStatus();
             return;
         }
         if (command.equals("end")) {
@@ -91,61 +63,26 @@ public class ChessGameController {
         throw new IllegalArgumentException("올바른 명령어를 입력해 주세요.");
     }
 
-    private void movePiece(final ChessGame chessGame, final String command) {
-        final List<Position> positions = readPositions(command);
-        final Position source = positions.get(SOURCE_INDEX);
-        final Position destination = positions.get(DESTINATION_INDEX);
-        chessGame.move(source, destination);
-        moveRepository.save(Movement.of(source, destination));
-        outputView.printBoard(chessGame.collectBoard());
-    }
-
-    private void checkGameFinished(final ChessGame chessGame) {
-        GameState gameState = chessGame.checkGameState();
-        if (gameState != GameState.PLAYING) {
-            outputView.printWinner(WinnerDisplay.findWinnerDisplay(gameState));
+    private void printWinnerIfGameFinished() {
+        if (!chessService.isPlayingState()) {
+            printWinner();
         }
     }
 
-    private void printStatus(final ChessGame chessGame) {
-        final GameState gameState = chessGame.checkGameState();
-        outputView.printScores(chessGame.calculateScore(Color.WHITE), chessGame.calculateScore(Color.BLACK));
-        if (gameState == GameState.PLAYING) {
+    private void printStatus() {
+        outputView.printScores(chessService.calculateWhiteScore(), chessService.calculateBlackScore());
+        if (chessService.isPlayingState()) {
             outputView.printGamePlaying();
             return;
         }
-        outputView.printWinner(WinnerDisplay.findWinnerDisplay(gameState));
+        printWinner();
     }
 
-
-    private List<Position> readPositions(final String command) {
-        final List<Position> positions = new ArrayList<>();
-        final List<String> rawPositions = parseSourceDestination(command);
-        positions.add(parsePosition(rawPositions.get(SOURCE_INDEX)));
-        positions.add(parsePosition(rawPositions.get(DESTINATION_INDEX)));
-        return positions;
-    }
-
-    private Position parsePosition(final String rawPosition) {
-        final int column = Column.findColumn(String.valueOf(rawPosition.charAt(COLUMN_INDEX)));
-        final int rank = parseRank(String.valueOf(rawPosition.charAt(RANK_INDEX)));
-        return new Position(column, rank);
-    }
-
-    private List<String> parseSourceDestination(final String command) {
-        final Matcher matcher = MOVE_COMMAND_PATTERN.matcher(command);
-
-        if (!matcher.find()) {
-            throw new IllegalArgumentException("올바른 명령어를 입력해 주세요.");
+    private void printWinner() {
+        if (chessService.isWhiteWin()) {
+            outputView.printWhiteWin();
+            return;
         }
-        return List.of(matcher.group(SOURCE_DESTINATION_INDEX).split("\\s+"));
-    }
-
-    private int parseRank(final String rawRank) {
-        try {
-            return Integer.parseInt(rawRank);
-        } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("올바른 명령어를 입력해주세요.");
-        }
+        outputView.printBlackWin();
     }
 }

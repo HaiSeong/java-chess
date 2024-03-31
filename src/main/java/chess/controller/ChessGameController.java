@@ -100,12 +100,8 @@ public class ChessGameController {
     }
 
     private void checkGameFinished(final ChessGame chessGame) {
-        if (chessGame.checkGameState() == GameState.WHITE_WIN) {
-            System.out.println("흰색이 이겼습니다.");
-        }
-        if (chessGame.checkGameState() == GameState.BLACK_WIN) {
-            System.out.println("검은색이 이겼습니다.");
-        }
+        GameState gameState = chessGame.checkGameState();
+        outputView.printWinner(WinnerDisplay.findWinnerDisplay(gameState));
     }
 
     private void printStatus(final ChessGame chessGame) {

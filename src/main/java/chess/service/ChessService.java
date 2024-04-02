@@ -77,12 +77,6 @@ public class ChessService {
         return positions;
     }
 
-    private Position parsePosition(final String rawPosition) {
-        final int column = Column.findColumn(String.valueOf(rawPosition.charAt(COLUMN_INDEX)));
-        final int rank = parseRank(String.valueOf(rawPosition.charAt(RANK_INDEX)));
-        return new Position(column, rank);
-    }
-
     private List<String> parseSourceDestination(final String command) {
         final Matcher matcher = MOVE_COMMAND_PATTERN.matcher(command);
 
@@ -90,6 +84,12 @@ public class ChessService {
             throw new IllegalArgumentException("올바른 입력 형식이 아닙니다.");
         }
         return List.of(matcher.group(SOURCE_DESTINATION_INDEX).split("\\s+"));
+    }
+
+    private Position parsePosition(final String rawPosition) {
+        final int column = Column.findColumn(String.valueOf(rawPosition.charAt(COLUMN_INDEX)));
+        final int rank = parseRank(String.valueOf(rawPosition.charAt(RANK_INDEX)));
+        return new Position(column, rank);
     }
 
     private int parseRank(final String rawRank) {

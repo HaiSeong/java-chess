@@ -7,7 +7,7 @@ import chess.domain.color.Color;
 import chess.domain.piece.Column;
 import chess.domain.piece.PieceType;
 import chess.domain.piece.Position;
-import chess.dto.Movement;
+import chess.repository.dto.Movement;
 import chess.repository.MovementRepository;
 import java.util.ArrayList;
 import java.util.List;

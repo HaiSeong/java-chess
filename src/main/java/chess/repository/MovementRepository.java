@@ -1,6 +1,6 @@
 package chess.repository;
 
-import chess.dto.Movement;
+import chess.repository.dto.Movement;
 import java.util.List;
 
 public interface MovementRepository {

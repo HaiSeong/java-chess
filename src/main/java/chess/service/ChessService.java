@@ -61,10 +61,6 @@ public class ChessService {
         return chessGame.checkGameState() == GameState.WHITE_WIN;
     }
 
-    public GameState checkGameState() {
-        return chessGame.checkGameState();
-    }
-
     public void movePiece(final String command) {
         final List<Position> positions = readPositions(command);
         final Position source = positions.get(SOURCE_INDEX);

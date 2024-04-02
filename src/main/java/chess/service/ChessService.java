@@ -8,7 +8,7 @@ import chess.domain.piece.Column;
 import chess.domain.piece.PieceType;
 import chess.domain.piece.Position;
 import chess.dto.Movement;
-import chess.repository.MoveRepository;
+import chess.repository.MovementRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,20 +24,20 @@ public class ChessService {
     private static final int DESTINATION_INDEX = 1;
     private static final int SOURCE_DESTINATION_INDEX = 1;
 
-    private final MoveRepository moveRepository;
+    private final MovementRepository movementRepository;
     private final ChessGame chessGame;
 
-    public ChessService(final MoveRepository moveRepository) {
+    public ChessService(final MovementRepository movementRepository) {
         this.chessGame = new ChessGame(new BoardFactory().getInitialBoard());
-        this.moveRepository = moveRepository;
+        this.movementRepository = movementRepository;
     }
 
     public void clearGame() {
-        moveRepository.clear();
+        movementRepository.clear();
     }
 
     public void loadPreviousGame() {
-        final List<Movement> movements = moveRepository.findAll();
+        final List<Movement> movements = movementRepository.findAll();
         for (final Movement movement : movements) {
             final Position source = new Position(movement.source_column(), movement.source_rank());
             final Position destination = new Position(movement.destination_column(), movement.destination_rank());
@@ -66,7 +66,7 @@ public class ChessService {
         final Position source = positions.get(SOURCE_INDEX);
         final Position destination = positions.get(DESTINATION_INDEX);
         chessGame.move(source, destination);
-        moveRepository.save(Movement.of(source, destination));
+        movementRepository.save(Movement.of(source, destination));
     }
 
     private List<Position> readPositions(final String command) {

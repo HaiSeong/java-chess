@@ -3,7 +3,7 @@ package chess.repository;
 import chess.dto.Movement;
 import java.util.List;
 
-public interface MoveRepository {
+public interface MovementRepository {
 
     void save(Movement movement);
 

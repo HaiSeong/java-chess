@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MySqlMoveRepository implements MoveRepository {
+public class MySqlMovementRepository implements MovementRepository {
 
     private static final String SERVER = "localhost:13306";
     private static final String DATABASE = "chess";

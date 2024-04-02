@@ -62,7 +62,6 @@ public abstract class MoveState {
         double totalScore = board.values().stream()
                 .filter(piece -> piece.isSameColor(color))
                 .mapToDouble(Piece::score)
-//                .mapToDouble(piece -> PieceScore.findScore(piece.pieceType()))
                 .sum();
 
         return totalScore - calculateSameLineDeductPoint(color);
